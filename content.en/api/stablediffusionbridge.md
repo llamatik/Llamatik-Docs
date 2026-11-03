@@ -20,7 +20,13 @@ Current support in the library code:
 ```kotlin
 expect object StableDiffusionBridge {
     fun getModelPath(modelFileName: String): String
-    fun initModel(modelPath: String, threads: Int = -1): Boolean
+    fun initModel(
+        modelPath: String,
+        threads: Int = -1,
+        vaePath: String? = null,
+        t5xxlPath: String? = null,
+        clipVisionPath: String? = null,
+    ): Boolean
     fun txt2img(
         prompt: String,
         negativePrompt: String? = null,
@@ -44,6 +50,17 @@ expect object StableDiffusionBridge {
         seed: Long = -1L,
     ): ByteArray
     fun release()
+    fun supportsVideoGeneration(): Boolean
+    fun txt2video(
+        prompt: String,
+        negativePrompt: String? = null,
+        width: Int = 512,
+        height: Int = 512,
+        videoFrames: Int = 16,
+        fps: Int = 8,
+        cfgScale: Float = 7.0f,
+        seed: Long = -1L,
+    ): ByteArray
 }
 ```
 
@@ -54,18 +71,32 @@ Returns a usable path for the model file on the current platform.
 val modelPath = StableDiffusionBridge.getModelPath("dreamshaper.safetensors")
 ```
 
-## `initModel(modelPath, threads)`
+## `initModel(modelPath, threads, vaePath, t5xxlPath, clipVisionPath)`
 Loads the Stable Diffusion model and creates the native context.
 
 ```kotlin
+// Standard model (SD, SDXL, …)
 val ok = StableDiffusionBridge.initModel(modelPath, threads = 4)
 check(ok) { "Failed to initialize Stable Diffusion model" }
+
+// DiT video model (Wan, LTX) — requires companion files
+val ok = StableDiffusionBridge.initModel(
+    modelPath      = modelPath,
+    threads        = 4,
+    vaePath        = vaePath,
+    t5xxlPath      = t5xxlPath,
+    clipVisionPath = clipVisionPath,
+)
+check(ok) { "Failed to initialize video model" }
 ```
 
 ### Parameters
 
 - `modelPath`: absolute or platform-resolved path to the model file
 - `threads`: CPU threads to use. Pass `-1` to let the backend decide
+- `vaePath`: path to the VAE file. Required for DiT-based video models (Wan, LTX); `null` otherwise
+- `t5xxlPath`: path to the T5-XXL text encoder. Required for DiT-based video models; `null` otherwise
+- `clipVisionPath`: path to the CLIP vision encoder. Required for DiT-based video models; `null` otherwise
 
 You normally call this once and reuse the loaded model for multiple generations.
 
@@ -161,6 +192,58 @@ StableDiffusionBridge.release()
 ```
 
 Call this when you are done with image generation or when the feature is being torn down.
+
+## `supportsVideoGeneration()`
+Returns `true` if the currently loaded model supports video generation.
+Must be called after `initModel`.
+
+```kotlin
+val ok = StableDiffusionBridge.initModel(modelPath, vaePath = vaePath, t5xxlPath = t5xxlPath, clipVisionPath = clipVisionPath)
+val videoSupported = StableDiffusionBridge.supportsVideoGeneration()
+```
+
+Use this to conditionally show video generation UI or skip `txt2video` calls for image-only models.
+
+## `txt2video(...)`
+Generates video frames from a text prompt and returns them as a packed byte array.
+
+```kotlin
+val raw = StableDiffusionBridge.txt2video(
+    prompt         = "A llama walking through a futuristic city",
+    negativePrompt = "blurry, low quality",
+    width          = 512,
+    height         = 512,
+    videoFrames    = 16,
+    fps            = 8,
+    cfgScale       = 7.0f,
+    seed           = 42L,
+)
+```
+
+### Parameters
+
+- `prompt`: text describing the desired video content
+- `negativePrompt`: what the model should avoid
+- `width` / `height`: frame dimensions in pixels. Default `512×512`
+- `videoFrames`: number of frames to generate. Default `16`. Higher values produce longer clips but take proportionally longer
+- `fps`: playback frame rate. Default `8`. Does not affect generation time
+- `cfgScale`: prompt adherence strength. Default `7.0`
+- `seed`: controls reproducibility. Use `-1L` for non-deterministic behavior
+
+### Return value
+
+Returns a packed `ByteArray` with a 16-byte little-endian header followed by the raw RGBA frame data:
+
+```
+[frameCount : 4 bytes LE][width : 4 bytes LE][height : 4 bytes LE][fps : 4 bytes LE]
+[frame 0 RGBA: width * height * 4 bytes]
+[frame 1 RGBA: width * height * 4 bytes]
+...
+```
+
+Returns an empty array on failure.
+
+See the [Video generation guide](../../guides/video-generation/) for a complete parsing and gallery-save example.
 
 ## Practical recommendations
 

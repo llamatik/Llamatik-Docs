@@ -9,8 +9,19 @@ The bridge returns raw RGBA pixel data so your app can convert it into the most 
 ## Initialize the model
 
 ```kotlin
+// Standard model (SD, SDXL, …)
 val modelPath = StableDiffusionBridge.getModelPath("dreamshaper.safetensors")
 val ok = StableDiffusionBridge.initModel(modelPath, threads = 4)
+check(ok)
+
+// DiT video model (Wan, LTX) — pass companion file paths
+val ok = StableDiffusionBridge.initModel(
+    modelPath      = StableDiffusionBridge.getModelPath("wan-video.gguf"),
+    threads        = 4,
+    vaePath        = StableDiffusionBridge.getModelPath("wan-vae.safetensors"),
+    t5xxlPath      = StableDiffusionBridge.getModelPath("t5xxl_fp16.safetensors"),
+    clipVisionPath = StableDiffusionBridge.getModelPath("clip_vision.safetensors"),
+)
 check(ok)
 ```
 
@@ -84,3 +95,8 @@ On mobile devices:
 ```kotlin
 StableDiffusionBridge.release()
 ```
+
+## Video generation
+
+`StableDiffusionBridge` also supports text-to-video generation for DiT-based models such as Wan and LTX.
+See the [Video generation guide](../video-generation/) for full details on `txt2video`, frame parsing, and saving clips to the device gallery.
