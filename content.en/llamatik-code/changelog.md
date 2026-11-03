@@ -8,7 +8,7 @@ weight: 7
 ## 1.8.0 — 2026-06-10
 
 ### Autonomous Local Development
-- **Offline Enterprise Pair Programmer** — structured mission workflow: gather context → classify risks → plan → patch → verify → audit report. Source code never leaves the device.
+- **Offline Enterprise Pair Programmer** — structured mission workflow: gather context → classify risks → plan → patch → verify → audit report. Inference runs locally by default; data leaves the machine only through services you explicitly configure.
 - **Mission classification** — 11 mission types auto-detected from plain-language requests (CODE_REVIEW, REFACTOR, BUG_FIX, FEATURE_IMPLEMENTATION, TEST_GENERATION, DOCUMENTATION, BUILD_FAILURE_REPAIR, ARCHITECTURE_EXPLANATION, DEPENDENCY_UPDATE, SECURITY_AUDIT, PERFORMANCE_ANALYSIS).
 - **Safety levels** — APPROVAL_REQUIRED (default), PLAN_ONLY, AUTO_APPLY, FULL_AUTO.
 - **Risk detection** — LOW / MEDIUM / HIGH / CRITICAL risks surfaced in the plan before any file is written. CRITICAL risks require explicit acknowledgement.

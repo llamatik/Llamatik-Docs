@@ -5,7 +5,7 @@ weight: 9
 
 # Offline Enterprise Pair Programmer
 
-The Offline Enterprise Pair Programmer is the flagship mode of Llamatik Code's Autonomous Local Development environment. It wraps every agent task in a structured, auditable workflow designed for teams where code must never leave the local machine.
+The Offline Enterprise Pair Programmer is the flagship mode of Llamatik Code's Autonomous Local Development environment. It wraps every agent task in a structured, auditable workflow designed for teams where inference runs locally by default and every external connection is explicit and auditable.
 
 ---
 

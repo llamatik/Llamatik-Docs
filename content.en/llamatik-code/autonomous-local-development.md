@@ -7,7 +7,7 @@ weight: 8
 
 Llamatik Code 1.8.0 ships **Autonomous Local Development** — a mission-driven coding environment. You describe a task, the agent plans it, applies patches, and verifies the result — entirely on your machine.
 
-**Core guarantee:** your source code never leaves your device.
+**Core guarantee:** inference runs locally by default. Data leaves your machine only through services you explicitly configure (MCP servers or, in the future, opt-in distributed inference).
 
 ---
 
@@ -74,18 +74,6 @@ Right-click in any editor → **Llamatik Code → Autonomous Local Development**
 | `PERFORMANCE_ANALYSIS` | performance, slow, optimise, profil |
 
 ---
-
-## Free vs Pro scope
-
-| Capability | Free | Pro |
-|---|---|---|
-| Current-file missions | Yes | Yes |
-| Selection-scoped missions | Yes | Yes |
-| Git-diff missions | Yes | Yes |
-| Directory / module missions | — | Yes |
-| Watched-area missions | — | Yes |
-| Before-commit enterprise review | — | Yes |
-| Build/test automation in missions | — | Yes |
 
 ---
 

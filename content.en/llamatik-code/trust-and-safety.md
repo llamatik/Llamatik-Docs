@@ -11,9 +11,9 @@ Llamatik Code is designed to be trustworthy by default. This document explains h
 
 ## Privacy guarantee
 
-All inference runs on a local GGUF model on your machine. Source code is never sent to Llamatik servers or any third-party AI service. The only exceptions are:
+Inference runs on a local GGUF model by default. No data is sent to Llamatik servers or any third-party AI service unless you explicitly configure it. External connections fall into two categories:
 
-- **MCP servers you configure yourself** — if an MCP server calls an external API, that traffic goes through the process you set up. The plugin itself never forwards code.
+- **MCP servers you configure yourself** — if an MCP server calls an external API, that traffic goes through the process you set up. The plugin routes tool calls to the server; what the server does with them is governed by its own configuration.
 - **External knowledge** — if you enable the External Knowledge feature, the agent may send search queries (not code) to the configured search provider.
 
 The Autonomous Local Development mode adds an additional constraint: external knowledge is disabled by default during enterprise missions, even when the feature is globally enabled.

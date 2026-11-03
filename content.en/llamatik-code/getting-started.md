@@ -49,30 +49,15 @@ Switch between modes using the mode selector at the top of the tool window.
 
 ## Privacy
 
-All inference runs locally by default. No data is sent to Llamatik servers. If you connect an MCP server that calls an external API, that traffic goes through the MCP server process you configured — the plugin itself never forwards your code anywhere.
+Inference runs locally by default. No data is sent to Llamatik servers. If you connect an MCP server that calls an external API, that traffic goes through the MCP server process you configured — the plugin itself does not forward your code. You control what connects to the outside world.
 
 ## Free vs Pro
 
-| Capability | Free | Pro |
-|---|---|---|
-| Chat (Ask mode) | Unlimited | Unlimited |
-| Single-session agent | Yes | Yes |
-| Multi-task agent | — | Yes |
-| Parallel chat sessions | Yes | Yes |
-| Multi-file apply | Yes | Yes |
-| Auto-build after apply | Yes | Yes |
-| Max tokens per response | 65 536 | 65 536 |
-| Context size setting | Yes | Yes |
-| Image attachments | 5 per session | Unlimited |
-| Skills | 3 active | Unlimited |
-| MCP servers | 1 (manual approval) | Unlimited + auto-approval |
-| Aggressive mode | — | Yes |
-| Auto-fix ("Fix it automatically") | Yes | Yes |
-| External Knowledge | 15 searches/day, 3 docs sources, 5 pages/task | 50 searches/day, 10 sources, 10 pages/task |
-| Code Health Monitor | LIGHT / manual only | BALANCED + AGGRESSIVE + background |
-| Enterprise missions (current file / selection / git diff) | Yes | Yes |
-| Enterprise missions (directory / module scope) | — | Yes |
-| Before-commit enterprise review | — | Yes |
-| Inline completions | Yes | Yes |
+**Every feature is available to individual developers for free.** There are no feature gates, no paywalls, and no time limits.
 
-Upgrade at [llamatik.com](https://www.llamatik.com).
+**Pro** comes in two forms:
+
+- **Individual Pro** — an optional donation to support the project. You get the same features as Free. Use the **Support ♥** button in the plugin header or visit [GitHub Sponsors](https://github.com/sponsors/ferranpons).
+- **Organization Pro** — required for companies and teams. Purchasing a seat on the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/31304) is the correct way to use Llamatik Code commercially and funds continued development ($15/month or $150/year per seat).
+
+See [llamatik.com](https://www.llamatik.com) for details.
