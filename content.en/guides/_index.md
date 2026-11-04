@@ -11,6 +11,10 @@ Practical guides for the most important Llamatik workflows.
 - [Agent Framework](agent-framework/) — `Agent { }` DSL, memory, streaming, tools, workflows
 - [Agent Platform](agent-platform/) — `AgentRuntime`, permissions, profiles, audit, built-in tools
 
+## Llamatik Server
+
+- [Llamatik Server](../llamatik-server/) — self-hosted HTTP backend that exposes the complete core API over HTTP
+
 ## Core (`:core`) guides
 
 - Text generation

@@ -29,8 +29,18 @@ bookFlatSection: true
 - **Getting started:** head to [Installation](getting-started/installation/) and [Quickstart](getting-started/quickstart/)
 - **Guides:** [SDK overview](guides/sdk-overview/), [Agent Framework](guides/agent-framework/), [Agent Platform](guides/agent-platform/), embeddings, streaming, JSON mode
 - **API reference:** `LlamaBridge`, `GenStream`, SDK types
+- **Llamatik Server:** [self-hosted HTTP backend](llamatik-server/) — run all inference bridges over HTTP
 - **Troubleshooting:** common build/linking pitfalls (especially iOS)
 - **Legacy (v1.x):** [v1.x documentation](v1-legacy/)
+
+## Llamatik Server
+
+[**Llamatik Server**](llamatik-server/) is a self-hosted Ktor backend that exposes the complete `com.llamatik:core` API over HTTP. One server, all inference — generation, embeddings, Whisper, Stable Diffusion image/video, and multimodal VLM.
+
+- [Getting Started](llamatik-server/getting-started/) — run the server, first `curl`
+- [Configuration](llamatik-server/configuration/) — env vars, JWT auth, path security
+- [API Reference](llamatik-server/api/) — all endpoints by bridge
+- [Deployment](llamatik-server/deployment/) — Docker, systemd, HTTPS
 
 ## Llamatik Code — IntelliJ Plugin
 
