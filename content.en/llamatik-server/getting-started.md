@@ -37,9 +37,11 @@ export JDBC_DRIVER="org.h2.Driver"
 export JDBC_DATABASE_URL="jdbc:h2:mem:llamatik;DB_CLOSE_DELAY=-1"
 ```
 
-`JWT_SECRET` signs user tokens. `JDBC_*` configure the user/profile database (H2 in-memory is fine for local development; use PostgreSQL for production). See [Configuration](../configuration/) for all variables.
+`JWT_SECRET` signs user tokens. `JDBC_*` configure the user/profile database (H2 in-memory is fine for local development; use PostgreSQL for production). To create the PostgreSQL database and schema, run `./scripts/setup-db.sh` from the server repository (idempotent; options `-h`, `-p`, `-U`, `-d`). See [Configuration](../configuration/) for all variables.
 
 ## Load a model and generate text
+
+> You can skip this step by setting `GENERATION_MODEL_PATH` so the model loads at startup — see [Configuration](../configuration/#startup-model-loading). `GET /v1/models` shows what is loaded.
 
 **Step 1 — initialize the generation model:**
 

@@ -5,7 +5,7 @@ weight: 20
 
 # Configuration
 
-Llamatik Server is configured entirely through environment variables — no config files.
+Llamatik Server is configured through environment variables. For local development, `local.properties` can supply them (see below).
 
 ## Environment variables
 
@@ -32,6 +32,29 @@ Llamatik Server is configured entirely through environment variables — no conf
 | `REQUIRE_INFERENCE_AUTH` | `false` | Set to `"true"` to require a valid JWT `Bearer` token on all inference endpoints (`/v1/generation`, `/v1/embeddings`, `/v1/whisper`, `/v1/stablediffusion`, `/v1/multimodal`). **Always enable this for internet-facing deployments.** |
 | `MODELS_DIR` | — | Absolute path to the directory containing model files, WAV files, and companion files (e.g. `/srv/models`). When set, all caller-supplied file paths must resolve inside this directory. Prevents path traversal. **Strongly recommended for all deployments.** |
 | `SESSIONS_DIR` | `$MODELS_DIR/sessions` | Absolute path for KV-session save/load files. Defaults to a `sessions/` subdirectory of `MODELS_DIR` when that variable is set. Session save/load is unconstrained when neither is configured. |
+
+### Startup model loading (optional)
+
+Set any of these to load a model during server startup, before the first connection is accepted. No client-side `/init` call is then needed. Check what is loaded with [`GET /v1/models`](../api/models/).
+
+| Variable | Bridge | Description |
+|---|---|---|
+| `GENERATION_MODEL_PATH` | Generation | LLM generation model (`.gguf`) |
+| `EMBEDDING_MODEL_PATH` | Generation | Embedding / RAG model (`.gguf`) |
+| `WHISPER_MODEL_PATH` | Whisper | Whisper STT model (`.bin`) |
+| `SD_MODEL_PATH` | Stable Diffusion | Image or video model (`.gguf` / `.safetensors`) |
+| `SD_VAE_PATH` | Stable Diffusion | VAE companion — required for Wan 2.1/2.2 video models |
+| `SD_T5XXL_PATH` | Stable Diffusion | T5-XXL companion — required for some video models |
+| `SD_CLIP_VISION_PATH` | Stable Diffusion | CLIP vision companion — image-to-video only |
+| `SD_THREADS` | Stable Diffusion | CPU threads (default `-1` = auto) |
+| `MULTIMODAL_MODEL_PATH` | Multimodal | VLM model — must be set together with `MULTIMODAL_MMPROJ_PATH` |
+| `MULTIMODAL_MMPROJ_PATH` | Multimodal | VLM multimodal projector |
+
+Paths are validated against `MODELS_DIR` like API-supplied paths. A failed startup load is logged but does not stop the server; the matching `/init` endpoint can be called to retry.
+
+### Local development (`local.properties`)
+
+When running with `./gradlew run`, copy `local.properties.example` to `local.properties` (gitignored) and set keys such as `models.dir` and `generation.model.path`; they are injected as the environment variables above. Priority: shell env var → `-P` flag / `gradle.properties` → `local.properties`. Production deployments that set real environment variables are unaffected.
 
 ### Administration (optional)
 
