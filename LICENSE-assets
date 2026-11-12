@@ -1,0 +1,47 @@
+Llamatik Docs — Proprietary Asset License
+
+Copyright 2026 Ferran Pons. All Rights Reserved.
+
+The custom visual assets — including logos, icons, favicons, screenshots and
+illustrations created for the Llamatik brand — are proprietary and protected
+by copyright. They are NOT covered by the MIT License that governs the
+documentation source of this project.
+
+COVERED ASSETS
+
+The proprietary designation applies to the Llamatik brand assets wherever they
+appear in the repository (static/, assets/, content.en/, layouts/):
+
+  - static/logo.png
+  - static/favicon-32x32.png
+  - Any other Llamatik logo, icon, favicon, screenshot or illustration added
+    to static/, assets/ or alongside documentation pages
+
+The "Llamatik" name and logo are proprietary marks owned by Ferran Pons.
+
+NOT COVERED BY THIS LICENSE
+
+  - themes/hugo-book — MIT License, © Alex Shpak (git submodule).
+  - Store badges and third-party logos — trademarks of their respective
+    owners, used under their brand guidelines.
+
+PERMITTED USE
+
+You may use the proprietary Llamatik brand assets solely to identify the
+Llamatik product when referring to it (e.g. in a blog post, review, or
+compatibility notice), provided you do not alter them and you include a
+caption or attribution crediting Ferran Pons / Llamatik.
+
+PROHIBITED USE
+
+Without explicit prior written permission from the copyright owner, you may NOT:
+- Copy, reproduce, or redistribute these assets in any form
+- Use these assets in any product, service, or derivative work
+- Modify, adapt, or create derivative works based on these assets
+- Use these assets or the "Llamatik" name in any manner that implies
+  endorsement by Ferran Pons or Llamatik
+- Remove or alter any copyright or trademark notices
+
+CONTACT
+
+For licensing inquiries or permission requests: info@llamatik.com

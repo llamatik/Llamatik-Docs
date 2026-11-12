@@ -22,3 +22,7 @@ See the [`NOTICE`](https://github.com/Llamatik-AI/Llamatik-Teammate/blob/main/NO
 ## Contact
 
 Licensing inquiries: [info@llamatik.com](mailto:info@llamatik.com)
+
+## Documentation
+
+The source of this documentation site is released under the **MIT License**. The Llamatik name, logos, icons, and other brand assets used on the site are proprietary and covered by a separate [`LICENSE-assets`](https://github.com/llamatik/Llamatik-Docs/blob/main/LICENSE-assets) file. The [`LICENSE`](https://github.com/llamatik/Llamatik-Docs/blob/main/LICENSE) file contains the full MIT text.
