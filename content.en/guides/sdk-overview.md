@@ -135,3 +135,38 @@ factory { (scope: String, systemPrompt: String?) -> Assistant(scope, systemPromp
 val assistant = get<Assistant> { parametersOf("chat", null) }
 assistant.streamChat(message).collect { chunk -> render(chunk) }
 ```
+
+### Vision model capabilities
+
+After a VLM is loaded, `AssistantState.vlmCapabilities` holds what the model can do. It is `MultimodalCapabilities.NONE` when no VLM is loaded, and it resets when the model is unloaded. `assistant.multimodalCapabilities()` returns the same value.
+
+```kotlin
+val caps = assistant.multimodalCapabilities()
+showAttachImageButton = caps.canAnalyzeImages
+```
+
+`assistant.analyzeImage(...)` checks `canAnalyzeImages` before running. If the loaded model can't analyze images, it posts `visionUnsupportedMessage` (a new optional parameter) as the bot reply instead of calling the model.
+
+### Image generation progress
+
+While an image is being generated, `AssistantState.generationProgress` holds the live `SdProgress` (or `null` when idle or unknown). Use `progress.fraction` for a progress bar.
+
+### ControlNet and video upscaling
+
+```kotlin
+// ControlNet — a Stable Diffusion model must be loaded first
+assistant.loadControlNet(controlNetPath)               // suspend; updates state.isControlNetLoaded
+assistant.generateImageWithControl(
+    prompt = "a modern glass house",
+    controlImageBytes = edgesPng,
+    controlType = SdControlType.CANNY,
+    decodeImageBytesToRgba = { bytes -> decodeToRgba(bytes) },
+)
+
+// Video upscaling — independent from the generation model
+assistant.loadVideoUpscaler(upscalerModelPath, upscalerVaePath, upscaleFactor = 2)
+val upscaled = assistant.upscaleVideo(packedFrames)    // suspend; empty array on failure
+assistant.unloadVideoUpscaler()
+```
+
+`state.isControlNetLoaded` and `state.isVideoUpscalerLoaded` reflect what is loaded.

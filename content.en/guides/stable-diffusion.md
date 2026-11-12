@@ -74,6 +74,47 @@ The `strength` parameter controls how much the source image is preserved:
 
 Make sure the `initImageRgba` array contains exactly `initImageW * initImageH * 4` bytes.
 
+## Show generation progress
+
+Register a listener before generating, and clear it afterwards.
+It is called on the thread running the generation, so switch to your UI dispatcher before updating the screen.
+
+```kotlin
+StableDiffusionBridge.setProgressListener { p ->
+    p.fraction?.let { updateProgressBar(it) }   // null when the total is unknown
+}
+try {
+    val rgba = StableDiffusionBridge.txt2img(prompt = prompt)
+} finally {
+    StableDiffusionBridge.setProgressListener(null)
+}
+```
+
+With the SDK `Assistant`, this is done for you: observe `AssistantState.generationProgress`.
+
+## Guide an image with ControlNet
+
+A ControlNet model lets a control image (pose, depth, edges, ...) steer the result.
+
+```kotlin
+StableDiffusionBridge.initModel(modelPath)
+StableDiffusionBridge.loadControlNet(controlNetPath)
+
+val rgba = StableDiffusionBridge.generateWithControl(
+    controlImageRgba = edgesRgba,
+    controlImageW = 512,
+    controlImageH = 512,
+    controlType = SdControlType.CANNY,
+    prompt = "a modern glass house, golden hour",
+)
+```
+
+- Use a `controlType` that matches what the ControlNet model was trained for.
+- Provide the control image already preprocessed (for example, an edge map for `CANNY`). Llamatik does not preprocess it.
+- `initModel` may create a new context, which drops the ControlNet. After every `initModel`, check `hasControlNet()` and reload it if needed.
+
+See [`StableDiffusionBridge`]({{< relref "../api/stablediffusionbridge" >}}) for every parameter.
+
 ## Parameter guidance
 
 - `width` and `height`: start with `512x512` unless you have benchmarked larger values

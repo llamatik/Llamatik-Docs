@@ -11,7 +11,8 @@ In the core library you can:
 - generate text and stream tokens
 - compute embeddings for retrieval workflows
 - persist and restore KV sessions
-- generate images locally with `StableDiffusionBridge`
+- generate images locally with `StableDiffusionBridge` (with progress reporting and ControlNet)
+- upscale generated video with `VideoUpscalerBridge`
 - transcribe WAV audio locally with `WhisperBridge`
 
 Recommended reading order:

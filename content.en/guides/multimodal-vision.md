@@ -25,6 +25,21 @@ val ok = MultimodalBridge.initModel(modelPath, mmprojPath)
 check(ok) { "Failed to initialize VLM" }
 ```
 
+## Check what the model supports
+
+Not every multimodal model accepts images — some are audio-only or speech models. After loading, ask the bridge what the model can do:
+
+```kotlin
+val caps = MultimodalBridge.getCapabilities()
+
+if (!caps.canAnalyzeImages) {
+    showMessage("The loaded model can't analyze images.")
+    return
+}
+```
+
+Use this to show or hide the image-attach button, and to show a clear message instead of a generic error. See [`MultimodalBridge`]({{< relref "../api/multimodalbridge" >}}) for every field.
+
 ## Analyze an image
 
 `analyzeImageBytesStream` accepts raw image bytes (JPEG, PNG, or BMP) and a text prompt.

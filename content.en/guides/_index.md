@@ -25,8 +25,8 @@ Practical guides for the most important Llamatik workflows.
 - Schema-constrained JSON
 - KV cache and sessions
 - Concurrent sessions
-- Stable Diffusion image generation
-- [Video generation](video-generation/) — `txt2video`, `supportsVideoGeneration`, frame parsing, gallery save
+- Stable Diffusion image generation — including progress reporting and ControlNet
+- [Video generation](video-generation/) — `txt2video`, `supportsVideoGeneration`, frame parsing, gallery save, upscaling
 - Whisper speech-to-text
 - Multimodal vision (VLM)
 - Multi-Token Prediction (MTP)

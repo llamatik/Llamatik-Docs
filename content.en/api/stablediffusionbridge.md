@@ -61,6 +61,24 @@ expect object StableDiffusionBridge {
         cfgScale: Float = 7.0f,
         seed: Long = -1L,
     ): ByteArray
+    fun setProgressListener(listener: SdProgressListener?)
+    fun loadControlNet(path: String): Boolean
+    fun unloadControlNet(): Boolean
+    fun hasControlNet(): Boolean
+    fun generateWithControl(
+        controlImageRgba: ByteArray,
+        controlImageW: Int,
+        controlImageH: Int,
+        controlType: SdControlType,
+        prompt: String,
+        negativePrompt: String? = null,
+        width: Int = 512,
+        height: Int = 512,
+        steps: Int = 20,
+        cfgScale: Float = 7.0f,
+        controlStrength: Float = 0.9f,
+        seed: Long = -1L,
+    ): ByteArray
 }
 ```
 
@@ -244,6 +262,98 @@ Returns a packed `ByteArray` with a 16-byte little-endian header followed by the
 Returns an empty array on failure.
 
 See the [Video generation guide](../../guides/video-generation/) for a complete parsing and gallery-save example.
+
+## `setProgressListener(listener)`
+Registers a listener that receives progress while `txt2img`, `img2img`, `generateWithControl` or `txt2video` is running.
+Pass `null` to clear it.
+
+```kotlin
+StableDiffusionBridge.setProgressListener { p ->
+    val percent = p.fraction?.let { (it * 100).toInt() }   // null when the total is unknown
+    println("${p.stage}: ${p.completed}/${p.total} ${p.unit ?: ""} ($percent%)")
+}
+
+try {
+    val rgba = StableDiffusionBridge.txt2img(prompt = "a lighthouse at dusk")
+} finally {
+    StableDiffusionBridge.setProgressListener(null)
+}
+```
+
+- The listener is called **synchronously on the thread running the generation**. Hand off to your own dispatcher before touching UI.
+- Register or clear it only while no generation is running.
+- The listener survives `initModel` and `release`.
+- On WASM this is a no-op.
+
+### `SdProgress`
+
+```kotlin
+data class SdProgress(
+    val stage: String,       // library stage name, e.g. text encoding, sampling, decoding
+    val detail: String?,
+    val unit: String?,       // unit of completed/total, e.g. steps
+    val samplePass: Int,     // counted from 1 since the listener was registered
+    val completed: Long,
+    val total: Long,         // 0 = unknown
+) {
+    val fraction: Float?     // 0f..1f, null when total is unknown
+}
+```
+
+`stage`, `detail` and `unit` come straight from stable-diffusion.cpp and are not localized. Prefer showing `fraction` (a percentage) in user-facing UI.
+
+## ControlNet
+
+A ControlNet model steers generation with a control image (a pose, a depth map, canny edges, ...).
+
+### `loadControlNet(path)` / `unloadControlNet()` / `hasControlNet()`
+`loadControlNet` loads a ControlNet model into the **current** context (hot-swap — it replaces any loaded one).
+Call `initModel` first, and never call these during a generation.
+`initModel` may create a new context (always on iOS; on Android and desktop whenever the model files change), which drops the loaded ControlNet.
+After every `initModel`, check `hasControlNet()` and load the ControlNet again if needed.
+
+```kotlin
+check(StableDiffusionBridge.initModel(modelPath))
+check(StableDiffusionBridge.loadControlNet(controlNetPath)) { "Failed to load ControlNet" }
+```
+
+### `generateWithControl(...)`
+Generates an image guided by a control image.
+It requires a loaded ControlNet and returns an empty array otherwise.
+
+```kotlin
+val rgba = StableDiffusionBridge.generateWithControl(
+    controlImageRgba = edgesRgba,         // RGBA, controlImageW * controlImageH * 4 bytes
+    controlImageW = 512,
+    controlImageH = 512,
+    controlType = SdControlType.CANNY,
+    prompt = "a modern glass house, golden hour",
+    controlStrength = 0.9f,
+)
+```
+
+#### Parameters
+
+- `controlImageRgba`, `controlImageW`, `controlImageH`: the control image, RGBA. It must already be in the form the ControlNet expects (for example an edge map for `CANNY`); Llamatik does not preprocess it.
+- `controlType`: an `SdControlType` that must match what the ControlNet model was trained for.
+- `controlStrength`: how strongly the control image steers the result. `0.9` is a sensible default.
+- the remaining parameters behave like [`txt2img`](#txt2img).
+
+#### `SdControlType`
+
+| Value | Use for |
+|---|---|
+| `NONE` | No control |
+| `OPENPOSE` | Human pose |
+| `DEPTH` | Depth maps |
+| `SCRIBBLE` | Thick lines: scribble, HED, soft edge, TED |
+| `CANNY` | Thin lines: canny, lineart, anime lineart, MLSD |
+| `NORMAL` | Normal maps |
+| `SEGMENT` | Segmentation maps |
+| `TILE` | Tiling / detail refinement |
+| `REPAINT` | Inpaint, outpaint |
+
+The return value is RGBA, the same as `txt2img`. See [Converting the RGBA result](#converting-the-rgba-result).
 
 ## Practical recommendations
 

@@ -12,7 +12,8 @@ Low-level JNI bridges — unchanged from v1.x.
 | `LlamaBridge` | Text generation, embeddings, streaming, JSON output, KV sessions |
 | `LlamaSession` | Isolated concurrent inference session with its own KV cache |
 | `MultimodalBridge` | On-device vision-language model (VLM) image analysis |
-| `StableDiffusionBridge` | On-device text-to-image, image-to-image, and text-to-video generation |
+| `StableDiffusionBridge` | On-device text-to-image, image-to-image, ControlNet-guided image, and text-to-video generation, with progress reporting |
+| `VideoUpscalerBridge` | On-device video super-resolution (RelayVSR / SeedVR2 style models) |
 | `WhisperBridge` | On-device speech-to-text from WAV audio |
 | `GenStream` | Callback interface for streaming token output |
 

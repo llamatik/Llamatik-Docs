@@ -117,6 +117,19 @@ if (saved) println("Video saved to gallery")
 
 `saveVideo` is a `suspend` function — call it from a coroutine.
 
+## Upscale a generated clip
+
+`VideoUpscalerBridge` increases the resolution of a clip with a video super-resolution model.
+It works on the same packed result `txt2video` returns, and returns the same layout with the new size in its header.
+
+```kotlin
+VideoUpscalerBridge.initModel(upscalerModelPath, upscalerVaePath, upscaleFactor = 2)
+
+val upscaled = VideoUpscalerBridge.upscale(packedBytes)   // call from a background thread
+```
+
+Parse `upscaled` exactly as shown above. See [`VideoUpscalerBridge`]({{< relref "../api/videoupscalerbridge" >}}) for the options and platform support.
+
 ## Parameter guidance
 
 | Parameter | Default | Notes |

@@ -23,6 +23,7 @@ expect object MultimodalBridge {
         prompt: String,
         callback: GenStream,
     )
+    fun getCapabilities(): MultimodalCapabilities
     fun cancelAnalysis()
     fun release()
 }
@@ -73,6 +74,61 @@ MultimodalBridge.analyzeImageBytesStream(
 
 - Call from a background thread — this call blocks for the duration of the stream.
 - Use `cancelAnalysis()` to interrupt a running analysis.
+
+## `getCapabilities()`
+Returns what the currently loaded model and projector pair can do, as reported by llama.cpp (`mtmd_helper_get_capabilities`).
+Returns `MultimodalCapabilities.NONE` (every flag `false`) when no model is loaded.
+
+```kotlin
+val caps = MultimodalBridge.getCapabilities()
+
+if (caps.canAnalyzeImages) {
+    // safe to call analyzeImageBytesStream
+} else {
+    showMessage("The loaded model can't analyze images.")
+}
+```
+
+Call it after `initModel` succeeds. The result is cheap to compute, but it does not change until you load a different model.
+
+### `MultimodalCapabilities`
+
+```kotlin
+data class MultimodalCapabilities(
+    val chat: Boolean,
+    val vision: Boolean,
+    val audio: Boolean,
+    val video: Boolean,
+    val audioStream: Boolean,
+    val textGen: Boolean,
+    val audioGen: Boolean,
+    val audioGenSpeakerRef: Boolean,
+) {
+    val canAnalyzeImages: Boolean  // chat && vision && textGen
+    companion object { val NONE: MultimodalCapabilities }
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `chat` | The model can be used for chat. `false` for TTS-only and realtime transcription models. |
+| `vision` | Accepts image input. |
+| `audio` | Accepts audio input. |
+| `video` | Accepts video input. Also depends on how llama.cpp was built. |
+| `audioStream` | Supports realtime audio transcription. |
+| `textGen` | Produces text output. `false` for audio-only models. |
+| `audioGen` | Produces audio output (speech). |
+| `audioGenSpeakerRef` | Accepts a speaker reference audio for voice cloning. |
+| `canAnalyzeImages` | Convenience: `chat && vision && textGen`. |
+
+{{< hint info >}}
+Llamatik currently exposes image analysis only. The `audio`, `video`, `audioStream` and `audioGen` flags tell you what the model supports; they do not mean Llamatik offers an API for them yet.
+{{< /hint >}}
+
+### Platform notes
+
+- **Android, iOS, JVM / Desktop**: the values come from the native model.
+- **WASM**: the model is loaded lazily inside the Web Worker, so real values are not available. After `initModel` the bridge reports `chat`, `vision` and `textGen` as `true`; before it, `NONE`.
 
 ## `cancelAnalysis()`
 Cancels a running `analyzeImageBytesStream` call.
