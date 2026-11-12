@@ -118,6 +118,12 @@ sudo systemctl start llamatik
 
 Llamatik Server speaks plain HTTP on port 8080. Terminate TLS at a reverse proxy.
 
+> Until built-in encryption is available, traffic between the Llamatik app and the server is **not encrypted**. On networks you do not fully trust, put the server behind a TLS reverse proxy and avoid sending sensitive data.
+
+### Browser (Wasm/JS) clients
+
+The server enables CORS for any origin and allows the `Authorization` and `Content-Type` headers. If you proxy the server, make sure `OPTIONS` preflight requests reach it (or are answered by the proxy with the same headers); otherwise browser clients fail with a CORS error. Pages served over HTTPS can only call HTTPS servers.
+
 ### Caddy (recommended for simplicity)
 
 ```

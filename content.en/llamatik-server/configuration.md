@@ -25,6 +25,17 @@ Llamatik Server is configured through environment variables. For local developme
 | `DB_PASSWORD` | — | Database password |
 | `DB_MAX_POOL_SIZE` | `3` | HikariCP connection pool size |
 
+### Network discovery (mDNS)
+
+The server advertises itself on the local network as a `_llamatik._tcp` service so the Llamatik app can find it from **Settings → Server → Scan**.
+
+| Variable | Default | Description |
+|---|---|---|
+| `MDNS_ENABLED` | `true` | Set to `"false"` to stop advertising the server. |
+| `MDNS_SERVICE_NAME` | machine hostname | Name shown in the app's discovery list. |
+
+mDNS uses multicast, which usually does not cross Docker's default bridge network, VPNs or guest Wi-Fi. In those cases add the server manually by IP and port. Advertising failures are logged and never prevent the server from starting.
+
 ### Security (optional but recommended)
 
 | Variable | Default | Description |

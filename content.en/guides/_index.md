@@ -14,6 +14,7 @@ Practical guides for the most important Llamatik workflows.
 ## Llamatik Server
 
 - [Llamatik Server](../llamatik-server/) — self-hosted HTTP backend that exposes the complete core API over HTTP
+- [Connecting to a server](connecting-to-a-server/) — use a server from the app: discovery, streaming, status dot, fallback, unencrypted-traffic warning
 
 ## Core (`:core`) guides
 
