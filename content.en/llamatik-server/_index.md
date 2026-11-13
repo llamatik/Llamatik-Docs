@@ -26,7 +26,7 @@ All endpoints mirror the bridge surface of `com.llamatik:core` 2.2.0:
 
 ## Using it from the Llamatik app
 
-The Llamatik app can discover and connect to a server from **Settings → Server**, stream responses from it, and show its status in the chat toolbar. See [Connecting to a server](../guides/connecting-to-a-server/).
+The Llamatik app can discover and connect to a server from **Settings → Connect to Server**, stream responses from it, and show its status in the chat toolbar. See [Connecting to a server](../guides/connecting-to-a-server/).
 
 > **Connections are currently unencrypted (plain HTTP).** Do not send sensitive data over untrusted networks. Encrypted connections are planned; see [Deployment](deployment/#https-with-a-reverse-proxy) for TLS via a reverse proxy.
 

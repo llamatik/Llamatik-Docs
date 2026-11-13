@@ -3,21 +3,21 @@ title: "Connecting to a server"
 weight: 16
 ---
 
-The Llamatik app can use a [Llamatik Server](../../llamatik-server/) for generation instead of (or alongside) a local model. This is useful when the device is too slow or the model too large, or when you want to share one powerful machine between several devices.
+The Llamatik app can use a [Llamatik Server](../../llamatik-server/) for generation instead of (or alongside) a local model. This is useful when the device is too slow or the model too large, or when you want to share one powerful machine between several devices. The other side can be a standalone Llamatik Server or another device running the app with [Share this device](../share-this-device/) turned on.
 
 > **Heads-up: connections are not encrypted yet.** Messages sent to the server travel over plain HTTP, so they are **not 100% secure** and anyone on the same network could potentially read them. Be careful about what you send, and avoid sharing passwords or sensitive personal information. Encrypted (HTTPS) connections are planned; both encrypted and unencrypted modes will be supported.
 
 ## Connect from the app
 
-Open **Settings → Server**:
+Open **Settings → Connect to Server**:
 
 - **Discover on network** — scan the local network for nodes advertising the `_llamatik._tcp` mDNS service and tap *Connect*. Llamatik Server advertises itself automatically (see [Configuration](../../llamatik-server/configuration/)); if it doesn't show up, add it manually. mDNS needs the phone and server on the same network, and it usually doesn't work across Docker's default bridge network, VPNs or guest Wi-Fi.
 - **Add manually** — enter the IP address, port and an optional name, then tap *Connect*.
 - **Saved servers** — servers you connected to before can be reconnected with one tap.
 
-Before the first connection to any server the app shows an *unencrypted connection* warning that you must confirm. The same warning is shown as a card at the top of the server screen.
+When you connect to a device that is sharing itself, the host owner has to approve you first (see [Share this device](../share-this-device/#approving-devices)). Before the first connection to any server the app shows an *unencrypted connection* warning that you must confirm. The same warning is shown as a card at the top of the server screen.
 
-Once connected, the server card lists its **available capabilities** (text, image, vision, video, audio), based on the models currently loaded on the server. The Settings screen also shows `Connected · <name> (<host:port>)` under the **Server** row.
+Once connected, the server card lists its **available capabilities** (text, image, vision, video, audio), based on the models currently loaded on the server. The Settings screen also shows `Connected · <name> (<host:port>)` under the **Connect to Server** row.
 
 ## Chat without a local model
 

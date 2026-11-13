@@ -27,7 +27,7 @@ Llamatik Server is configured through environment variables. For local developme
 
 ### Network discovery (mDNS)
 
-The server advertises itself on the local network as a `_llamatik._tcp` service so the Llamatik app can find it from **Settings → Server → Scan**.
+The server advertises itself on the local network as a `_llamatik._tcp` service so the Llamatik app can find it from **Settings → Connect to Server → Scan**.
 
 | Variable | Default | Description |
 |---|---|---|
