@@ -40,7 +40,13 @@ The same check also refreshes the capability list, so models loaded on the serve
 
 ## Fallback to local generation
 
-If the server is unreachable, has no text model loaded, times out or fails mid-request, the app falls back to local generation when a local model is available. When the request already failed, a dialog offers to retry the same prompt locally.
+If the server is unreachable or has no text model loaded, the app falls back to local generation when a local model is available. When the request already failed, a dialog offers to retry the same prompt locally.
+
+### Reconnecting mid-stream
+
+A dropped connection while a response is streaming does **not** trigger the fallback. The app reconnects and continues the same generation: the server keeps generating and replays the text you missed, so nothing is lost or duplicated. It retries up to 4 times with increasing delays (1s, 2s, 4s, 8s); the counter resets whenever a retry makes progress. A connection that stays silent for 2 minutes is treated as dead.
+
+Only when reconnecting keeps failing, or the server went offline or lost its model, is local generation offered. If the server can no longer resume the stream (for example it restarted), the app restarts the request on the server once it is reachable again, replacing the partial text. Servers older than this feature cannot resume; the app then restarts the request instead of risking duplicated text.
 
 ## Using the client from code
 
@@ -58,6 +64,23 @@ if (client.isReachable()) {
     ).collect { chunk -> print(chunk) }              // streamed token by token
 }
 ```
+
+Dropped connections are resumed transparently. To tune the retries, pass a `StreamRetryPolicy`:
+
+```kotlin
+val client = LlamatikServerClient(
+    config = LlamatikServerConfig(host = "192.168.1.20", port = 8080),
+    retryPolicy = StreamRetryPolicy(maxAttempts = 6, baseDelayMs = 500, maxDelayMs = 8_000, idleTimeoutMs = 120_000),
+)
+```
+
+The stream functions can throw:
+
+| Exception | Meaning |
+|---|---|
+| `StreamInterruptedException` | Connection kept dropping and all retries were used. |
+| `StreamExpiredException` | The server cannot resume this stream. Restart the request and discard the partial text. |
+| `RemoteInferenceException` | The server reported an error or returned a 4xx/5xx status. Not retried. |
 
 Notes:
 

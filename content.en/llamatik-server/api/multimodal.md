@@ -56,6 +56,8 @@ On error:
 data: {"event":"error","message":"VLM streaming failed"}
 ```
 
+This stream is resumable after a dropped connection, see [Resumable streams](../#resumable-streams).
+
 ### Example — encode an image in Kotlin
 
 ```kotlin

@@ -97,7 +97,7 @@ Generate from the existing KV cache without resetting it. Call this to extend a 
 
 ## Streaming (SSE)
 
-All streaming endpoints return `Content-Type: text/event-stream`.
+All streaming endpoints return `Content-Type: text/event-stream`. They are resumable after a dropped connection with the `X-Stream-Id` / `Last-Event-ID` headers, see [Resumable streams](../#resumable-streams).
 
 ### `POST /v1/generation/stream`
 
