@@ -8,7 +8,7 @@ bookCollapseSection: true
 
 **Llamatik Server** is a self-hosted HTTP backend that exposes the complete Llamatik library API over HTTP. Deploy it on any JVM machine and point your Llamatik apps — or any HTTP client — at it.
 
-All endpoints mirror the bridge surface of `com.llamatik:core` 2.2.0:
+All endpoints mirror the bridge surface of `com.llamatik:core` 2.3.0. The API itself is implemented by the [`com.llamatik:server`](https://central.sonatype.com/artifact/com.llamatik/server) library — the same code the Llamatik app uses to [share a device](../guides/share-this-device/) — and this project runs it standalone (Tomcat, JWT auth, profiles, mDNS):
 
 | Bridge | Route prefix | Capabilities |
 |---|---|---|
